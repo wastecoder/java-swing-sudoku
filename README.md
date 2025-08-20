@@ -83,3 +83,12 @@ Executar o arquivo: GUIMain.java
 ```bash
 Executar o arquivo: CLIMain.java
 ```
+
+
+---
+
+
+## Imagens do Projeto
+
+### Tabuleiro com erro
+![Tabuleiro com erro](.images/1-Board.png)
