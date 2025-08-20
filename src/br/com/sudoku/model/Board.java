@@ -11,7 +11,7 @@ import static br.com.sudoku.model.GameStatusEnum.NON_STARTED;
 
 public class Board {
 
-    private final List<List<Space>> spaces;
+    private List<List<Space>> spaces;
 
 
     public Board(final List<List<Space>> spaces) {

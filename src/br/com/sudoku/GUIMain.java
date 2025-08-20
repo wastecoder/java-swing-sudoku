@@ -7,7 +7,7 @@ import br.com.sudoku.difficulty.FileSudokuPuzzle;
 public class GUIMain {
 
     public static void main(String[] args) {
-        FileSudokuPuzzle chosenGame = new FileSudokuPuzzle(DifficultyEnum.MEDIUM, 2);
+        FileSudokuPuzzle chosenGame = new FileSudokuPuzzle(DifficultyEnum.EASY, 1);
         var mainScreen = new MainScreen(chosenGame.toGameConfig());
         mainScreen.buildMainScreen();
     }

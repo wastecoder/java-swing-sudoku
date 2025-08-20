@@ -12,7 +12,7 @@ public class BoardService {
 
     private final static int BOARD_LIMIT = 9;
 
-    private final Board board;
+    private Board board;
 
 
     public BoardService(final Map<String, String> gameConfig) {
@@ -35,6 +35,10 @@ public class BoardService {
         return spaces;
     }
 
+
+    public void loadNewConfig(Map<String, String> gameConfig) {
+        this.board = new Board(initBoard(gameConfig));
+    }
 
     public List<List<Space>> getSpaces(){
         return board.getSpaces();
