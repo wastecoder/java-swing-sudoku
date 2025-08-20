@@ -6,6 +6,7 @@ import br.com.sudoku.gui.custom.button.CheckGameStatusButton;
 import br.com.sudoku.gui.custom.button.FinishGameButton;
 import br.com.sudoku.gui.custom.button.ResetButton;
 import br.com.sudoku.gui.custom.button.StartButton;
+import br.com.sudoku.gui.custom.checkbox.ErrorCheckBox;
 import br.com.sudoku.gui.custom.frame.MainFrame;
 import br.com.sudoku.gui.custom.input.NumberText;
 import br.com.sudoku.gui.custom.panel.MainPanel;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.BooleanSupplier;
 
 import static br.com.sudoku.service.EventEnum.CLEAR_SPACE;
 import static javax.swing.JOptionPane.QUESTION_MESSAGE;
@@ -29,7 +31,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class MainScreen {
 
-    private final static Dimension dimension = new Dimension(600, 650);
+    private static final Dimension dimension = new Dimension(600, 650);
 
     private final BoardService boardService;
     private final NotifierService notifierService;
@@ -40,6 +42,7 @@ public class MainScreen {
     private JButton finishGameButton;
     private JButton resetButton;
 
+    private JCheckBox errorCheckBox;
     private JComboBox<String> difficultySelect;
 
     public MainScreen(final Map<String, String> gameConfig) {
@@ -58,6 +61,8 @@ public class MainScreen {
 
         addStartButton(topPanel);
 
+        errorCheckBox = new ErrorCheckBox(e -> {});
+        topPanel.add(errorCheckBox);
         topPanel.add(difficultySelect);
         topPanel.add(startButton);
         mainPanel.add(topPanel);
@@ -89,7 +94,10 @@ public class MainScreen {
     }
 
     private JPanel generateSection(final List<Space> spaces){
-        List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
+        BooleanSupplier errorCheckEnabled = () -> errorCheckBox.isSelected();
+        List<NumberText> fields = spaces.stream()
+                .map(space -> new NumberText(space, errorCheckEnabled))
+                .toList();
         fields.forEach(t -> notifierService.subscribe(CLEAR_SPACE, t));
         return new SudokuSector(fields);
     }

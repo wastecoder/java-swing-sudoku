@@ -5,19 +5,18 @@ import br.com.sudoku.service.EventEnum;
 import br.com.sudoku.service.EventListener;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.function.BooleanSupplier;
 
 import static br.com.sudoku.service.EventEnum.CLEAR_SPACE;
 import static java.awt.Font.PLAIN;
 
 public class NumberText extends JTextField implements EventListener {
 
-    private final Space space;
-
-    public NumberText(final Space space) {
-        this.space = space;
+    public NumberText(final Space space, final BooleanSupplier errorCheckEnabled) {
         var dimension = new Dimension(50, 50);
         this.setSize(dimension);
         this.setPreferredSize(dimension);
@@ -49,9 +48,17 @@ public class NumberText extends JTextField implements EventListener {
             private void changeSpace(){
                 if (getText().isEmpty()){
                     space.clearSpace();
+                    setBorder(UIManager.getBorder("TextField.border"));
                     return;
                 }
-                space.setActual(Integer.parseInt(getText()));
+
+                int value = Integer.parseInt(getText());
+                space.setActual(value);
+                if (errorCheckEnabled.getAsBoolean() && !space.isCorrect()) {
+                    setBorder(new LineBorder(Color.RED, 2));
+                } else {
+                    setBorder(UIManager.getBorder("TextField.border"));
+                }
             }
 
         });

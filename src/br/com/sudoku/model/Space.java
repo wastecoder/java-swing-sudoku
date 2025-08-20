@@ -16,6 +16,11 @@ public class Space {
     }
 
 
+    public boolean isCorrect() {
+        if (actual == null) return true;
+        return actual.equals(expected);
+    }
+
     public void clearSpace(){
         setActual(null);
     }
