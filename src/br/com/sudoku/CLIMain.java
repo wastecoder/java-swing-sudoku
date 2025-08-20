@@ -14,7 +14,7 @@ import static br.com.sudoku.util.BoardTemplate.BOARD_TEMPLATE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-public class Executar {
+public class CLIMain {
 
     private final static Scanner scanner = new Scanner(System.in);
 
