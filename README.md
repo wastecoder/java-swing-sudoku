@@ -75,14 +75,10 @@ As melhorias e funcionalidades extras abaixo foram desenvolvidas por mim:
 
 ### Interface gráfica (Swing)
 
-```bash
-Executar o arquivo: GUIMain.java
-```
+Execute o arquivo `GUIMain.java`
 
-### Interface gráfica (Swing)
-```bash
-Executar o arquivo: CLIMain.java
-```
+### Linha de comando (terminal)
+Execute o arquivo `CLIMain.java`
 
 
 ---
