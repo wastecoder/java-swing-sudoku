@@ -1,5 +1,7 @@
 package br.com.sudoku;
 
+import br.com.sudoku.difficulty.DifficultyEnum;
+import br.com.sudoku.difficulty.FileSudokuPuzzle;
 import br.com.sudoku.model.Board;
 import br.com.sudoku.model.Space;
 
@@ -7,12 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 import static br.com.sudoku.util.BoardTemplate.BOARD_TEMPLATE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toMap;
 
 public class Executar {
 
@@ -23,11 +23,6 @@ public class Executar {
     private final static int BOARD_LIMIT = 9;
 
     public static void main(String[] args) {
-        final var positions = Stream.of(args)
-                .collect(toMap(
-                        k -> k.split(";")[0],
-                        v -> v.split(";")[1]
-                ));
         var option = -1;
         while (option != 8) {
             System.out.println("Selecione uma das opções a seguir");
@@ -43,7 +38,7 @@ public class Executar {
             option = scanner.nextInt();
 
             switch (option){
-                case 1 -> startGame(positions);
+                case 1 -> startGame();
                 case 2 -> inputNumber();
                 case 3 -> removeNumber();
                 case 4 -> showCurrentGame();
@@ -56,11 +51,30 @@ public class Executar {
         }
     }
 
-    private static void startGame(final Map<String, String> positions) {
-        if (nonNull(board)){
+    private static void startGame() {
+        if (nonNull(board)) {
             System.out.println("O jogo já foi iniciado");
             return;
         }
+
+        System.out.println("Escolha a dificuldade do jogo:");
+        System.out.println("1 - Fácil");
+        System.out.println("2 - Médio");
+        System.out.println("3 - Difícil");
+        int difficultyOption = runUntilGetValidNumber(1, 3);
+
+        DifficultyEnum difficulty = switch (difficultyOption) {
+            case 1 -> DifficultyEnum.EASY;
+            case 2 -> DifficultyEnum.MEDIUM;
+            case 3 -> DifficultyEnum.HARD;
+            default -> throw new IllegalStateException("Opção inválida");
+        };
+
+        System.out.printf("Escolha o jogo da dificuldade %s (1 ou 2):%n", difficulty.getDisplayName());
+        int gameNumber = runUntilGetValidNumber(1, 2);
+
+        FileSudokuPuzzle puzzle = new FileSudokuPuzzle(difficulty, gameNumber);
+        Map<String, String> positions = puzzle.toGameConfig();
 
         List<List<Space>> spaces = new ArrayList<>();
         for (int row = 0; row < BOARD_LIMIT; row++) {
@@ -89,11 +103,11 @@ public class Executar {
         var col = runUntilGetValidNumber(0, 8);
         System.out.println("Informe a linha que em que o número será inserido");
         var row = runUntilGetValidNumber(0, 8);
-        System.out.printf("Informe o número que vai entrar na posição [%s,%s]\n", col, row);
+        System.out.printf("Informe o número que vai entrar na posição [%s,%s]%n", col, row);
         var value = runUntilGetValidNumber(1, 9);
 
         if (!board.changeValue(col, row, value)){
-            System.out.printf("A posição [%s,%s] tem um valor fixo\n", col, row);
+            System.out.printf("A posição [%s,%s] tem um valor fixo%n", col, row);
         }
     }
 
@@ -109,7 +123,7 @@ public class Executar {
         var row = runUntilGetValidNumber(0, 8);
 
         if (!board.clearValue(col, row)){
-            System.out.printf("A posição [%s,%s] tem um valor fixo\n", col, row);
+            System.out.printf("A posição [%s,%s] tem um valor fixo%n", col, row);
         }
     }
 
@@ -136,7 +150,7 @@ public class Executar {
             return;
         }
 
-        System.out.printf("O jogo atualmente se encontra no status %s\n", board.getStatus().getLabel());
+        System.out.printf("O jogo atualmente se encontra no status %s%n", board.getStatus().getLabel());
         if(board.hasErrors()){
             System.out.println("O jogo contém erros");
         } else {
@@ -173,9 +187,9 @@ public class Executar {
             showCurrentGame();
             board = null;
         } else if (board.hasErrors()) {
-            System.out.println("Seu jogo conté, erros, verifique seu board e ajuste-o");
+            System.out.println("Seu jogo contém, erros, verifique seu board e ajuste-o");
         } else {
-            System.out.println("Você ainda precisa preenhcer algum espaço");
+            System.out.println("Você ainda precisa preencher algum espaço");
         }
     }
 
